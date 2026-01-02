@@ -1,0 +1,33 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+import pandas as pd
+import time
+
+# Path to your ChromeDriver
+CHROMEDRIVER_PATH = "/path/to/chromedriver"
+
+# Load form data
+data = pd.read_csv("form_data.csv")
+
+# Open Chrome
+driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH)
+
+# Example: a dummy web form URL
+form_url = "https://www.example.com/form"
+
+for index, row in data.iterrows():
+    driver.get(form_url)
+    time.sleep(2)  # wait for page to load
+    
+    # Fill form fields
+    driver.find_element(By.NAME, "first_name").send_keys(row['first_name'])
+    driver.find_element(By.NAME, "last_name").send_keys(row['last_name'])
+    driver.find_element(By.NAME, "email").send_keys(row['email'])
+    driver.find_element(By.NAME, "phone").send_keys(str(row['phone']))
+    
+    # Submit the form
+    driver.find_element(By.XPATH, "//button[@type='submit']").click()
+    time.sleep(2)  # wait for submission
+
+print("All forms submitted successfully!")
+driver.quit()
